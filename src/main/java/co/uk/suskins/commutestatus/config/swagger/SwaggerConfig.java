@@ -11,6 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+    //todo add additional configuration here based on application propertiees to allow for disabling of swagger in 'production'
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
