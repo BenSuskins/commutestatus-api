@@ -59,9 +59,11 @@ Here's a blank template to get started:
 
 ### Built With
 
-* []()
-* []()
-* []()
+* Java 
+* Spring Boot
+* National Rail Darwin API
+* Auth0
+* Postgres
 
 
 
@@ -77,6 +79,19 @@ This is an example of how to list things you need to use the software and how to
 ```sh
 mvn install
 ```
+
+#### Environment Variables
+* AUTH0_CLIENT_ID
+* AUTH0_CLIENT_SECRET
+* AUTH0_CLIENT_SECRET
+* AUTH0_REFRESH_SECRET
+* AUTH0_DOMAIN
+* NATIONAL_RAIL_ACCESS_TOKEN
+* POSTGRES_HOST
+* POSTGRES_PORT
+* POSTGRES_DATABASE
+* POSTGRES_USERNAME
+* POSTGRES_PASSWORD
 
 ### Installation
  
