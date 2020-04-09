@@ -28,6 +28,7 @@ public class SwaggerConfig {
     private String email;
     private String license;
     private String licenseUrl;
+    private String tosUrl;
 
     @Bean
     public Docket api() {
@@ -45,7 +46,7 @@ public class SwaggerConfig {
                 title,
                 description,
                 version,
-                "",
+                tosUrl,
                 new Contact(name, website, email),
                 license,
                 licenseUrl,
