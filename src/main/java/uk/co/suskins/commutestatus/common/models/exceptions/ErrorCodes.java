@@ -14,7 +14,9 @@ public enum ErrorCodes {
     DATABASE_ERROR(104, "DATABASE_ERROR",
             "A database error occurred, please contact support.", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_ALREADY_EXISTS(105, "USER_ALREADY_EXISTS",
-            "A user already exists for this email address, please try another email address.", HttpStatus.BAD_REQUEST);
+            "A user already exists for this email address, please try another email address.", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND(106, "USER_NOT_FOUND",
+            "No user was found for the given user ID.", HttpStatus.NOT_FOUND);
 
     private final Integer errorCode;
     private final String errorTitle;

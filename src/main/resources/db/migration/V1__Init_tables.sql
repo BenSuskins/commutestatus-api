@@ -9,6 +9,7 @@ create table commutestatus.user
     first_name   text               not null,
     last_name    text               not null,
     date_created date default now() not null,
+    date_updated date,
     auth_id      text               not null
 );
 
