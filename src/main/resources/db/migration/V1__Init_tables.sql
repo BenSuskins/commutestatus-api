@@ -1,16 +1,14 @@
-create schema commutestatus;
-
 create table commutestatus.user
 (
     id           SERIAL             not null
         constraint user_pkey
             primary key,
-    email        text               not null,
-    first_name   text               not null,
-    last_name    text               not null,
-    date_created date default now() not null,
-    date_updated date,
-    auth_id      text               not null
+    email        TEXT               not null,
+    first_name   TEXT               not null,
+    last_name    TEXT               not null,
+    date_created DATE default now() not null,
+    date_updated DATE,
+    auth_id      TEXT               not null
 );
 
 create table commutestatus.station
@@ -18,19 +16,19 @@ create table commutestatus.station
     id     SERIAL               not null
         constraint station_pkey
             primary key,
-    crs    text                 not null,
-    name   text                 not null,
-    active boolean default true not null
+    crs    TEXT                 not null,
+    name   TEXT                 not null,
+    active BOOLEAN default true not null
 );
 
 create table commutestatus.user_preference
 (
-    id              SERIAL not null
+    id              SERIAL  not null
         constraint user_preference_pkey
             primary key,
-    user_id         long   not null
+    user_id         INTEGER not null
         constraint user_preference_user_id_fk
             references station,
-    home_station_id long   not null,
-    work_station_id long   not null
+    home_station_id INTEGER not null,
+    work_station_id INTEGER not null
 );
