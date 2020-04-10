@@ -1,6 +1,6 @@
 create schema commutestatus;
 
-create table commutestatus."user"
+create table commutestatus.user
 (
     id           SERIAL             not null
         constraint user_pkey
