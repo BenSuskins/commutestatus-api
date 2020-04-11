@@ -28,7 +28,7 @@ public class UserController extends BaseController {
         userService.postUser(userRequest);
     }
 
-    @PutMapping("/secured/user/{userId}")
+    @PutMapping("/secure/user/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation("Create a new user entity and user preferences")
     public void putUser(@PathVariable("userId") Long userId, UserRequest userRequest) {

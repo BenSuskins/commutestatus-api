@@ -17,7 +17,7 @@ public class CommuteStatusController extends BaseController {
         this.commuteStatusService = commuteStatusService;
     }
 
-    @GetMapping("/secured/commutestatus")
+    @GetMapping("/secure/commutestatus")
     @ApiOperation("Returns the calling users commute status")
     public CommuteStatusResponse postUser() {
         return null;
