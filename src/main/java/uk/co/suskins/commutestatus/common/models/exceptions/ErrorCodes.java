@@ -16,7 +16,9 @@ public enum ErrorCodes {
     USER_ALREADY_EXISTS(105, "USER_ALREADY_EXISTS",
             "A user already exists for this email address, please try another email address.", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(106, "USER_NOT_FOUND",
-            "No user was found for the given user ID.", HttpStatus.NOT_FOUND);
+            "No user was found for the given user ID.", HttpStatus.NOT_FOUND),
+    NATIONAL_RAIL_ERROR(107, "NATIONAL_RAIL_ERROR",
+            "An error occurred with the National Rail Darwin API.", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final Integer errorCode;
     private final String errorTitle;
