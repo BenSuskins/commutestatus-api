@@ -23,6 +23,7 @@ import uk.co.suskins.commutestatus.config.auth0.Auth0Config;
 import uk.co.suskins.commutestatus.user.models.api.UserRequest;
 import uk.co.suskins.commutestatus.user.models.mapper.UserMapper;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -106,7 +107,7 @@ public class UserService {
             AuthAPI authAPI = new AuthAPI(auth0Config.getDomain(),
                     auth0Config.getClientId(), auth0Config.getClientSecret());
             AuthRequest authRequest =
-                    authAPI.requestToken(auth0Config.getDomain() + "/api/v2/");
+                    authAPI.requestToken(auth0Config.getDomain() + "api/v2/");
             TokenHolder holder = authRequest.execute();
             ManagementAPI mgmt =
                     new ManagementAPI(auth0Config.getDomain(), holder.getAccessToken());
@@ -135,13 +136,13 @@ public class UserService {
         }
     }
 
-    public void putUser(Long userId, UserRequest userRequest) {
+    public void putUser(Principal principal, UserRequest userRequest) {
         try {
             //Get the user
-            Optional<User> optionalUser = userRepository.findById(userId);
+            Optional<User> optionalUser = userRepository.findByAuthId(principal.getName());
             if (optionalUser.isEmpty()) {
-                log.error("[{}] {} During putUser for user ID {}",
-                        ErrorCodes.USER_NOT_FOUND.getErrorCode(), ErrorCodes.USER_NOT_FOUND.getErrorTitle(), userId);
+                log.error("[{}] {} During putUser for auth ID {}",
+                        ErrorCodes.USER_NOT_FOUND.getErrorCode(), ErrorCodes.USER_NOT_FOUND.getErrorTitle(), principal.getName());
                 throw new CommuteStatusServiceException(ErrorCodes.USER_NOT_FOUND);
             }
 
@@ -165,11 +166,11 @@ public class UserService {
             }
 
             //Get the users preferences
-            Optional<UserPreference> optionalUserPreference = userPreferenceRepository.findByUserId(userId);
+            Optional<UserPreference> optionalUserPreference = userPreferenceRepository.findByUserId(user.getId());
             if (optionalUserPreference.isEmpty()) {
                 log.error("[{}] {} During putUser for user ID {}",
-                        ErrorCodes.USER_NOT_FOUND.getErrorCode(), ErrorCodes.USER_NOT_FOUND.getErrorTitle(), userId);
-                throw new CommuteStatusServiceException(ErrorCodes.USER_NOT_FOUND);
+                        ErrorCodes.USER_PREFERENCE_NOT_FOUND.getErrorCode(), ErrorCodes.USER_PREFERENCE_NOT_FOUND.getErrorTitle(), user.getId());
+                throw new CommuteStatusServiceException(ErrorCodes.USER_PREFERENCE_NOT_FOUND);
             }
 
             //Then we update user preference
@@ -213,7 +214,7 @@ public class UserService {
             AuthAPI authAPI = new AuthAPI(auth0Config.getDomain(),
                     auth0Config.getClientId(), auth0Config.getClientSecret());
             AuthRequest authRequest =
-                    authAPI.requestToken(auth0Config.getDomain() + "/api/v2/");
+                    authAPI.requestToken(auth0Config.getDomain() + "api/v2/");
             TokenHolder holder = authRequest.execute();
             ManagementAPI mgmt =
                     new ManagementAPI(auth0Config.getDomain(), holder.getAccessToken());

@@ -1,6 +1,8 @@
 package uk.co.suskins.commutestatus.station.controller;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +21,13 @@ public class StationController extends BaseController {
         this.stationService = stationService;
     }
 
-    @GetMapping("/stations")
+    @GetMapping("public/stations")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation("Returns all stations and their CRS codes")
+    @ApiOperation(value = "Returns all stations and their corresponding CRS code.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Stations succesfully returned."),
+            @ApiResponse(code = 500, message = "Internal error."),
+    })
     public StationResponse getStations() {
         return stationService.getStations();
     }

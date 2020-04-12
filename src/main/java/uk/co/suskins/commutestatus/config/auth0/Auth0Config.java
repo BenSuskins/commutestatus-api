@@ -12,4 +12,5 @@ public class Auth0Config {
     private String clientSecret;
     private String refreshSecret;
     private String domain;
+    private String audience;
 }
