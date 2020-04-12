@@ -15,10 +15,12 @@ import uk.co.suskins.commutestatus.common.models.entities.UserPreference;
 import uk.co.suskins.commutestatus.common.models.exceptions.CommuteStatusServiceException;
 import uk.co.suskins.commutestatus.common.models.exceptions.ErrorCodes;
 import uk.co.suskins.commutestatus.common.repository.UserPreferenceRepository;
+import uk.co.suskins.commutestatus.common.repository.UserRepository;
 import uk.co.suskins.commutestatus.commutestatus.models.api.CommuteStatusResponse;
 import uk.co.suskins.commutestatus.commutestatus.models.mapper.CommuteStatusMapper;
 import uk.co.suskins.commutestatus.config.nationalrail.NationalRailConfig;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Slf4j
@@ -26,15 +28,18 @@ import java.util.Optional;
 public class CommuteStatusService {
     private static final Integer NUMBER_ROWS = 5;
     private final UserPreferenceRepository userPreferenceRepository;
+    private final UserRepository userRepository;
     private final AccessToken accessToken;
     private final CommuteStatusMapper commuteStatusMapper;
     private final LDBServiceSoap ldbServiceSoap;
 
     @Autowired
     public CommuteStatusService(UserPreferenceRepository userPreferenceRepository,
+                                UserRepository userRepository,
                                 NationalRailConfig nationalRailConfig,
                                 CommuteStatusMapper commuteStatusMapper) {
         this.userPreferenceRepository = userPreferenceRepository;
+        this.userRepository = userRepository;
         this.accessToken = new AccessToken();
         this.accessToken.setTokenValue(nationalRailConfig.getAccessToken());
         this.commuteStatusMapper = commuteStatusMapper;
@@ -42,13 +47,23 @@ public class CommuteStatusService {
         this.ldbServiceSoap = ldb.getLDBServiceSoap12();
     }
 
-    public CommuteStatusResponse getCommuteStatus(User user) {
+    public CommuteStatusResponse getCommuteStatus(Principal principal) {
         try {
-            Optional<UserPreference> optionalUserPreference = userPreferenceRepository.findByUserId(user.getId());
-            if (optionalUserPreference.isEmpty()) {
-                log.error("[{}] {} During getCommuteStatus for user ID {}",
+            Optional<User> optionalUser = userRepository.findByAuthId("auth0|5e9071cc4e733f0c24011a3f");
+            if (optionalUser.isEmpty()) {
+                log.error("[{}] {} During getCommuteStatus for auth ID {}",
                         ErrorCodes.USER_NOT_FOUND.getErrorCode(),
-                        ErrorCodes.USER_NOT_FOUND.getErrorTitle(), user.getId());
+                        ErrorCodes.USER_NOT_FOUND.getErrorTitle(), principal.getName());
+                throw new CommuteStatusServiceException(ErrorCodes.USER_NOT_FOUND);
+            }
+
+            User user = optionalUser.get();
+            Optional<UserPreference> optionalUserPreference = userPreferenceRepository.findByUserId(user.getId());
+
+            if (optionalUserPreference.isEmpty()) {
+                log.error("[{}] {} During getCommuteStatus for auth ID {}",
+                        ErrorCodes.USER_NOT_FOUND.getErrorCode(),
+                        ErrorCodes.USER_NOT_FOUND.getErrorTitle(), principal.getName());
                 throw new CommuteStatusServiceException(ErrorCodes.USER_NOT_FOUND);
             }
             UserPreference userPreference = optionalUserPreference.get();
