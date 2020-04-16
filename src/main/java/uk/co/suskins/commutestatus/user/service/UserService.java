@@ -20,6 +20,7 @@ import uk.co.suskins.commutestatus.common.repository.StationRepository;
 import uk.co.suskins.commutestatus.common.repository.UserPreferenceRepository;
 import uk.co.suskins.commutestatus.common.repository.UserRepository;
 import uk.co.suskins.commutestatus.config.auth0.Auth0Config;
+import uk.co.suskins.commutestatus.user.models.api.UserReponse;
 import uk.co.suskins.commutestatus.user.models.api.UserRequest;
 import uk.co.suskins.commutestatus.user.models.mapper.UserMapper;
 
@@ -243,6 +244,42 @@ public class UserService {
         } catch (Exception ex) {
             log.error("[{}] {} During createAuth0User",
                     ErrorCodes.UNKNOWN_ERROR.getErrorCode(), ErrorCodes.UNKNOWN_ERROR.getErrorTitle(), ex);
+            throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_ERROR);
+        }
+    }
+
+    public UserReponse getUser(Principal principal) {
+        try {
+            //Get the user
+            Optional<User> optionalUser = userRepository.findByAuthId(principal.getName());
+            if (optionalUser.isEmpty()) {
+                log.error("[{}] {} During putUser for auth ID {}",
+                        ErrorCodes.USER_NOT_FOUND.getErrorCode(), ErrorCodes.USER_NOT_FOUND.getErrorTitle(), principal.getName());
+                throw new CommuteStatusServiceException(ErrorCodes.USER_NOT_FOUND);
+            }
+            User user = optionalUser.get();
+
+            //Get the users preferences
+            Optional<UserPreference> optionalUserPreference = userPreferenceRepository.findByUserId(user.getId());
+            if (optionalUserPreference.isEmpty()) {
+                log.error("[{}] {} During putUser for user ID {}",
+                        ErrorCodes.USER_PREFERENCE_NOT_FOUND.getErrorCode(), ErrorCodes.USER_PREFERENCE_NOT_FOUND.getErrorTitle(), user.getId());
+                throw new CommuteStatusServiceException(ErrorCodes.USER_PREFERENCE_NOT_FOUND);
+            }
+            UserPreference userPreference = optionalUserPreference.get();
+
+            return userMapper.userToUserResponse(user, userPreference);
+        } catch (CommuteStatusServiceException ex) {
+            throw ex;
+        } catch (DataException ex) {
+            log.error("[{}] {} During postUser",
+                    ErrorCodes.DATABASE_ERROR.getErrorCode(),
+                    ErrorCodes.DATABASE_ERROR.getErrorTitle(), ex);
+            throw new CommuteStatusServiceException(ErrorCodes.DATABASE_ERROR);
+        } catch (Exception ex) {
+            log.error("[{}] {} During postUser",
+                    ErrorCodes.UNKNOWN_ERROR.getErrorCode(),
+                    ErrorCodes.UNKNOWN_ERROR.getErrorTitle(), ex);
             throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_ERROR);
         }
     }
