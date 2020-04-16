@@ -25,10 +25,11 @@ public class CommuteStatusMapper {
                                         ? false : serviceItem.isIsCancelled())
                                         || (Objects.isNull(serviceItem.isFilterLocationCancelled())
                                         ? false : serviceItem.isFilterLocationCancelled()))
-                        .formation(Objects.isNull(serviceItem.getLength()) ? -1 : serviceItem.getLength())
                         .platform(Objects.isNull(serviceItem.getPlatform()) ? "" : serviceItem.getPlatform())
                         .cancelReason(Objects.isNull(serviceItem.getCancelReason()) ? "" : serviceItem.getCancelReason())
                         .delayReason(Objects.isNull(serviceItem.getDelayReason()) ? "" : serviceItem.getDelayReason())
+                        .from(stationBoardToWork.getLocationName())
+                        .to(stationBoardToWork.getFilterLocationName())
                         .build()).collect(Collectors.toList());
 
         toHome = stationBoardToHome.getTrainServices().getService().stream()
@@ -40,10 +41,11 @@ public class CommuteStatusMapper {
                                         ? false : serviceItem.isIsCancelled())
                                         || (Objects.isNull(serviceItem.isFilterLocationCancelled())
                                         ? false : serviceItem.isFilterLocationCancelled()))
-                        .formation(Objects.isNull(serviceItem.getLength()) ? -1 : serviceItem.getLength())
                         .platform(Objects.isNull(serviceItem.getPlatform()) ? "" : serviceItem.getPlatform())
                         .cancelReason(Objects.isNull(serviceItem.getCancelReason()) ? "" : serviceItem.getCancelReason())
                         .delayReason(Objects.isNull(serviceItem.getDelayReason()) ? "" : serviceItem.getDelayReason())
+                        .from(stationBoardToHome.getLocationName())
+                        .to(stationBoardToHome.getFilterLocationName())
                         .build()).collect(Collectors.toList());
 
         return new CommuteStatusResponse(toWork, toHome);

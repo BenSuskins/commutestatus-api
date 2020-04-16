@@ -15,6 +15,7 @@ public class CommuteStatusResponseEntity {
     private String platform;
     private String delayReason;
     private String cancelReason;
-    private Integer formation;
     private Boolean isCancelled;
+    private String to;
+    private String from;
 }
