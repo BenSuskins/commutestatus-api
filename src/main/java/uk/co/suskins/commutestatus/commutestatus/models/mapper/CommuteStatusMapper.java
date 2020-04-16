@@ -18,8 +18,8 @@ public class CommuteStatusMapper {
 
         toWork = stationBoardToWork.getTrainServices().getService().stream()
                 .map(serviceItem -> CommuteStatusResponseEntity.builder()
-                        .estimatedTimeOfDepature(serviceItem.getEtd())
-                        .scheduledTimeOfDepature(serviceItem.getStd())
+                        .estimatedTimeOfDeparture(serviceItem.getEtd())
+                        .scheduledTimeOfDeparture(serviceItem.getStd())
                         .isCancelled(
                                 (Objects.isNull(serviceItem.isIsCancelled())
                                         ? false : serviceItem.isIsCancelled())
@@ -34,8 +34,8 @@ public class CommuteStatusMapper {
 
         toHome = stationBoardToHome.getTrainServices().getService().stream()
                 .map(serviceItem -> CommuteStatusResponseEntity.builder()
-                        .estimatedTimeOfDepature(serviceItem.getEtd())
-                        .scheduledTimeOfDepature(serviceItem.getStd())
+                        .estimatedTimeOfDeparture(serviceItem.getEtd())
+                        .scheduledTimeOfDeparture(serviceItem.getStd())
                         .isCancelled(
                                 (Objects.isNull(serviceItem.isIsCancelled())
                                         ? false : serviceItem.isIsCancelled())
