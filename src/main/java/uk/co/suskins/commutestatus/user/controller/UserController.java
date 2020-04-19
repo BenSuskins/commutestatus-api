@@ -36,7 +36,7 @@ public class UserController extends BaseController {
             @ApiResponse(code = 201, message = "User successfully created."),
             @ApiResponse(code = 500, message = "Internal error."),
     })
-    public void postUser(UserRequest userRequest) {
+    public void postUser(@RequestBody UserRequest userRequest) {
         userService.postUser(userRequest);
     }
 
