@@ -63,8 +63,8 @@ public class UserService {
             }
 
             //Check that the stations provided are valid
-            Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStationID());
-            Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStationID());
+            Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStation());
+            Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStation());
 
             if (homeStation.isEmpty() || workStation.isEmpty()) {
                 throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_STATION_ID);
@@ -150,13 +150,16 @@ public class UserService {
             //Then we update the user
             User user = optionalUser.get();
             if (Objects.nonNull(userRequest.getLastName())) {
-                user.setLastName(userRequest.getLastName());
             }
             if (Objects.nonNull(userRequest.getFirstName())) {
                 user.setFirstName(userRequest.getFirstName());
             }
             if (Objects.nonNull(userRequest.getEmail())) {
-                user.setEmail(userRequest.getEmail());
+                if (userRequest.getEmail().equals(user.getEmail())) {
+                    userRequest.setEmail(null);
+                } else {
+                    user.setEmail(userRequest.getEmail());
+                }
             }
             user.setDateUpdated(new Date());
             userRepository.save(user);
@@ -177,20 +180,20 @@ public class UserService {
             //Then we update user preference
             UserPreference userPreference = optionalUserPreference.get();
 
-            if (Objects.nonNull(userRequest.getWorkStationID())) {
-                Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStationID());
+            if (Objects.nonNull(userRequest.getWorkStation())) {
+                Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStation());
                 if (workStation.isEmpty()) {
                     throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_STATION_ID);
                 }
                 userPreference.setWorkStation(workStation.get());
             }
 
-            if (Objects.nonNull(userRequest.getHomeStationID())) {
-                Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStationID());
+            if (Objects.nonNull(userRequest.getHomeStation())) {
+                Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStation());
                 if (homeStation.isEmpty()) {
                     throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_STATION_ID);
                 }
-                userPreference.setWorkStation(homeStation.get());
+                userPreference.setHomeStation(homeStation.get());
             }
 
             userPreferenceRepository.save(userPreference);

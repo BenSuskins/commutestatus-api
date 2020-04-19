@@ -22,7 +22,7 @@ public class UserRequest {
     @ApiModelProperty("Users password")
     private String password;
     @ApiModelProperty("Users home railway station ID")
-    private Long homeStationID;
+    private Long homeStation;
     @ApiModelProperty("Users work railway station ID")
-    private Long workStationID;
+    private Long workStation;
 }
