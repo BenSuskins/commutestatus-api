@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommuteStatusResponseEntity {
-    private String scheduledTimeOfDepature;
-    private String estimatedTimeOfDepature;
+    private String scheduledTimeOfDeparture;
+    private String estimatedTimeOfDeparture;
     private String platform;
     private String delayReason;
     private String cancelReason;
-    private Integer formation;
     private Boolean isCancelled;
+    private String to;
+    private String from;
 }

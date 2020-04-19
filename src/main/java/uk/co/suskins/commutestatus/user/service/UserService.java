@@ -20,6 +20,7 @@ import uk.co.suskins.commutestatus.common.repository.StationRepository;
 import uk.co.suskins.commutestatus.common.repository.UserPreferenceRepository;
 import uk.co.suskins.commutestatus.common.repository.UserRepository;
 import uk.co.suskins.commutestatus.config.auth0.Auth0Config;
+import uk.co.suskins.commutestatus.user.models.api.UserReponse;
 import uk.co.suskins.commutestatus.user.models.api.UserRequest;
 import uk.co.suskins.commutestatus.user.models.mapper.UserMapper;
 
@@ -62,8 +63,8 @@ public class UserService {
             }
 
             //Check that the stations provided are valid
-            Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStationID());
-            Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStationID());
+            Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStation());
+            Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStation());
 
             if (homeStation.isEmpty() || workStation.isEmpty()) {
                 throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_STATION_ID);
@@ -149,13 +150,16 @@ public class UserService {
             //Then we update the user
             User user = optionalUser.get();
             if (Objects.nonNull(userRequest.getLastName())) {
-                user.setLastName(userRequest.getLastName());
             }
             if (Objects.nonNull(userRequest.getFirstName())) {
                 user.setFirstName(userRequest.getFirstName());
             }
             if (Objects.nonNull(userRequest.getEmail())) {
-                user.setEmail(userRequest.getEmail());
+                if (userRequest.getEmail().equals(user.getEmail())) {
+                    userRequest.setEmail(null);
+                } else {
+                    user.setEmail(userRequest.getEmail());
+                }
             }
             user.setDateUpdated(new Date());
             userRepository.save(user);
@@ -176,20 +180,20 @@ public class UserService {
             //Then we update user preference
             UserPreference userPreference = optionalUserPreference.get();
 
-            if (Objects.nonNull(userRequest.getWorkStationID())) {
-                Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStationID());
+            if (Objects.nonNull(userRequest.getWorkStation())) {
+                Optional<Station> workStation = stationRepository.findById(userRequest.getWorkStation());
                 if (workStation.isEmpty()) {
                     throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_STATION_ID);
                 }
                 userPreference.setWorkStation(workStation.get());
             }
 
-            if (Objects.nonNull(userRequest.getHomeStationID())) {
-                Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStationID());
+            if (Objects.nonNull(userRequest.getHomeStation())) {
+                Optional<Station> homeStation = stationRepository.findById(userRequest.getHomeStation());
                 if (homeStation.isEmpty()) {
                     throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_STATION_ID);
                 }
-                userPreference.setWorkStation(homeStation.get());
+                userPreference.setHomeStation(homeStation.get());
             }
 
             userPreferenceRepository.save(userPreference);
@@ -243,6 +247,42 @@ public class UserService {
         } catch (Exception ex) {
             log.error("[{}] {} During createAuth0User",
                     ErrorCodes.UNKNOWN_ERROR.getErrorCode(), ErrorCodes.UNKNOWN_ERROR.getErrorTitle(), ex);
+            throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_ERROR);
+        }
+    }
+
+    public UserReponse getUser(Principal principal) {
+        try {
+            //Get the user
+            Optional<User> optionalUser = userRepository.findByAuthId(principal.getName());
+            if (optionalUser.isEmpty()) {
+                log.error("[{}] {} During putUser for auth ID {}",
+                        ErrorCodes.USER_NOT_FOUND.getErrorCode(), ErrorCodes.USER_NOT_FOUND.getErrorTitle(), principal.getName());
+                throw new CommuteStatusServiceException(ErrorCodes.USER_NOT_FOUND);
+            }
+            User user = optionalUser.get();
+
+            //Get the users preferences
+            Optional<UserPreference> optionalUserPreference = userPreferenceRepository.findByUserId(user.getId());
+            if (optionalUserPreference.isEmpty()) {
+                log.error("[{}] {} During putUser for user ID {}",
+                        ErrorCodes.USER_PREFERENCE_NOT_FOUND.getErrorCode(), ErrorCodes.USER_PREFERENCE_NOT_FOUND.getErrorTitle(), user.getId());
+                throw new CommuteStatusServiceException(ErrorCodes.USER_PREFERENCE_NOT_FOUND);
+            }
+            UserPreference userPreference = optionalUserPreference.get();
+
+            return userMapper.userToUserResponse(user, userPreference);
+        } catch (CommuteStatusServiceException ex) {
+            throw ex;
+        } catch (DataException ex) {
+            log.error("[{}] {} During postUser",
+                    ErrorCodes.DATABASE_ERROR.getErrorCode(),
+                    ErrorCodes.DATABASE_ERROR.getErrorTitle(), ex);
+            throw new CommuteStatusServiceException(ErrorCodes.DATABASE_ERROR);
+        } catch (Exception ex) {
+            log.error("[{}] {} During postUser",
+                    ErrorCodes.UNKNOWN_ERROR.getErrorCode(),
+                    ErrorCodes.UNKNOWN_ERROR.getErrorTitle(), ex);
             throw new CommuteStatusServiceException(ErrorCodes.UNKNOWN_ERROR);
         }
     }

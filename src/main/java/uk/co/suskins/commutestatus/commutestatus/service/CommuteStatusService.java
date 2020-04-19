@@ -49,7 +49,7 @@ public class CommuteStatusService {
 
     public CommuteStatusResponse getCommuteStatus(Principal principal) {
         try {
-            Optional<User> optionalUser = userRepository.findByAuthId("auth0|5e9071cc4e733f0c24011a3f");
+            Optional<User> optionalUser = userRepository.findByAuthId(principal.getName());
             if (optionalUser.isEmpty()) {
                 log.error("[{}] {} During getCommuteStatus for auth ID {}",
                         ErrorCodes.USER_NOT_FOUND.getErrorCode(),
