@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserReponse {
-    String firstName;
-    String lastName;
     String email;
     String workStation;
     String homeStation;

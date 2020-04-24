@@ -15,10 +15,6 @@ import lombok.NoArgsConstructor;
 public class UserRequest {
     @ApiModelProperty("Users email address")
     private String email;
-    @ApiModelProperty("Users first name")
-    private String firstName;
-    @ApiModelProperty("Users last name")
-    private String lastName;
     @ApiModelProperty("Users password")
     private String password;
     @ApiModelProperty("Users home railway station ID")

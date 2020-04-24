@@ -10,8 +10,6 @@ public class UserMapper {
     public UserReponse userToUserResponse(User user, UserPreference userPreference) {
         return UserReponse.builder()
                 .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
                 .workStation(userPreference.getWorkStation().getName())
                 .homeStation(userPreference.getHomeStation().getName())
                 .build();

@@ -74,8 +74,6 @@ public class UserService {
             User userToCreate = User.builder()
                     .authId(createAuth0User(userRequest))
                     .email(userRequest.getEmail())
-                    .firstName(userRequest.getFirstName())
-                    .lastName(userRequest.getLastName())
                     .dateCreated(new Date())
                     .build();
             User createdUser = userRepository.save(userToCreate);
@@ -149,11 +147,6 @@ public class UserService {
 
             //Then we update the user
             User user = optionalUser.get();
-            if (Objects.nonNull(userRequest.getLastName())) {
-            }
-            if (Objects.nonNull(userRequest.getFirstName())) {
-                user.setFirstName(userRequest.getFirstName());
-            }
             if (Objects.nonNull(userRequest.getEmail())) {
                 if (userRequest.getEmail().equals(user.getEmail())) {
                     userRequest.setEmail(null);
