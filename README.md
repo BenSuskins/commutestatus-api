@@ -14,22 +14,23 @@
 <br />
 <p align="center">
   <a>
-    <img src="https://avatars1.githubusercontent.com/u/5471266?s=460&u=ffdc6bb815f378181362597f63a5af932df168ea&v=4" alt="Logo" width="80" height="80">
+    <img src="https://clipartix.com/wp-content/uploads/2016/04/Train-clipart-for-kids-free-free-clipart-images.gif" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Commute Status API</h3>
+  <h3 align="center">Commute Status Web App</h3>
 
   <p align="center">
-    todo Description
+    Commute Status a simple Web and Android app to quickly see the status of your commute.
     <br />
     <br />
-    <a href="https://commutestatus.suskins.co.uk">View Demo</a>
+    <a href="https://commutestatus.suskins.co.uk">Check it out!</a>
     ·
-    <a href="https://github.com/BenSuskins/commutestatus-api/issues">Report Bug</a>
+    <a href="https://github.com/BenSuskins/commutestatus-web-app/issues">Report Bug</a>
     ·
-    <a href="https://github.com/BenSuskins/commutestatus-api/issues">Request Feature</a>
+    <a href="https://github.com/BenSuskins/commutestatus-web-app/issues">Request Feature</a>
   </p>
 </p>
+
 
 
 
@@ -52,9 +53,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Commute Status Screenshot](docs/commuteStatus.png)
 
-Here's a blank template to get started:
+Commute Status is a simple Web and Android app to quickly and easily see the status of your commute.
+
+Check out the [Android App](https://github.com/BenSuskins/commutestatus-android-app).
+
+Check out the [Web App](https://github.com/BenSuskins/commutestatus-web-app).
 
 
 ### Built With
